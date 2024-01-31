@@ -1,0 +1,167 @@
+{
+  "info": {
+    "_postman_id": "your-postman-id",
+    "name": "Group Chat APIs",
+    "description": "API collection for Group Chat application",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Admin APIs",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/admin/createUser",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpassword\",\n  \"isAdmin\": true\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Edit User",
+          "request": {
+            "method": "PUT",
+            "url": "http://localhost:3000/admin/editUser/{userId}",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"editeduser\",\n  \"password\": \"editedpassword\",\n  \"isAdmin\": true\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication APIs",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/auth/login",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpassword\"\n}"
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Groups APIs",
+      "item": [
+        {
+          "name": "Create Group",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/groups/createGroup",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "your-auth-token",
+                "description": "Token obtained after login"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"testgroup\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Group",
+          "request": {
+            "method": "DELETE",
+            "url": "http://localhost:3000/groups/deleteGroup/{groupId}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "your-auth-token",
+                "description": "Token obtained after login"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Search Group",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/groups/searchGroup/{groupName}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "your-auth-token",
+                "description": "Token obtained after login"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Add Member to Group",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/groups/addMember/{groupId}/{userId}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "your-auth-token",
+                "description": "Token obtained after login"
+              }
+            ]
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Group Messages APIs",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "url": "http://localhost:3000/messages/sendMessage/{groupId}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "your-auth-token",
+                "description": "Token obtained after login"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"test message\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Like Message",
+          "request": {
+            "method": "PUT",
+            "url": "http://localhost:3000/messages/likeMessage/{messageId}",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "your-auth-token",
+                "description": "Token obtained after login"
+              }
+            ]
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

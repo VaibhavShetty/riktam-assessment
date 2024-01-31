@@ -1,0 +1,37 @@
+version: '3.1'
+services:
+  mongo:
+    image: mongo
+    restart: always
+    networks:
+      - webnet
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo-data:/data/db
+  mongo-express:
+    image: mongo-express
+    restart: always
+    networks:
+      - webnet
+    depends_on:
+      - mongo
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_SERVER: mongo
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+
+
+networks:
+  webnet:
+
+volumes:
+  mongodb_data:
