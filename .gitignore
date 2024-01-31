@@ -2,3 +2,4 @@ coverage
 node_modules
 .vscode
 mongo-data
+package-lock.json
