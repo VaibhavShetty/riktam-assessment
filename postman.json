@@ -1,167 +1,525 @@
 {
-  "info": {
-    "_postman_id": "your-postman-id",
-    "name": "Group Chat APIs",
-    "description": "API collection for Group Chat application",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "Admin APIs",
-      "item": [
-        {
-          "name": "Create User",
-          "request": {
-            "method": "POST",
-            "url": "http://localhost:3000/admin/createUser",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpassword\",\n  \"isAdmin\": true\n}"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Edit User",
-          "request": {
-            "method": "PUT",
-            "url": "http://localhost:3000/admin/editUser/{userId}",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"editeduser\",\n  \"password\": \"editedpassword\",\n  \"isAdmin\": true\n}"
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Authentication APIs",
-      "item": [
-        {
-          "name": "Login",
-          "request": {
-            "method": "POST",
-            "url": "http://localhost:3000/auth/login",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpassword\"\n}"
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Groups APIs",
-      "item": [
-        {
-          "name": "Create Group",
-          "request": {
-            "method": "POST",
-            "url": "http://localhost:3000/groups/createGroup",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "your-auth-token",
-                "description": "Token obtained after login"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"testgroup\"\n}"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Group",
-          "request": {
-            "method": "DELETE",
-            "url": "http://localhost:3000/groups/deleteGroup/{groupId}",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "your-auth-token",
-                "description": "Token obtained after login"
-              }
-            ]
-          },
-          "response": []
-        },
-        {
-          "name": "Search Group",
-          "request": {
-            "method": "GET",
-            "url": "http://localhost:3000/groups/searchGroup/{groupName}",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "your-auth-token",
-                "description": "Token obtained after login"
-              }
-            ]
-          },
-          "response": []
-        },
-        {
-          "name": "Add Member to Group",
-          "request": {
-            "method": "POST",
-            "url": "http://localhost:3000/groups/addMember/{groupId}/{userId}",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "your-auth-token",
-                "description": "Token obtained after login"
-              }
-            ]
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Group Messages APIs",
-      "item": [
-        {
-          "name": "Send Message",
-          "request": {
-            "method": "POST",
-            "url": "http://localhost:3000/messages/sendMessage/{groupId}",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "your-auth-token",
-                "description": "Token obtained after login"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"content\": \"test message\"\n}"
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Like Message",
-          "request": {
-            "method": "PUT",
-            "url": "http://localhost:3000/messages/likeMessage/{messageId}",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "your-auth-token",
-                "description": "Token obtained after login"
-              }
-            ]
-          },
-          "response": []
-        }
-      ]
-    }
-  ]
+	"info": {
+		"_postman_id": "0df94836-b40f-45e8-9785-4bcdf5fea4d6",
+		"name": "Group Chat APIs",
+		"description": "API collection for Group Chat application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin APIs",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser3\",\n  \"password\": \"testpassword\",\n  \"isAdmin\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3004/admin/createUser",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3004",
+							"path": [
+								"admin",
+								"createUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const authRequest = {\r",
+									"  method: 'POST',\r",
+									"  url: 'http://localhost:3004/auth/login',\r",
+									"  header: {\r",
+									"    'Content-Type': 'application/json',\r",
+									"    // Add any other headers if required\r",
+									"  },\r",
+									"  body: {\r",
+									"    mode: 'raw',\r",
+									"    raw: JSON.stringify({\r",
+									"      username: 'testuser3',\r",
+									"      password: 'testpassword',\r",
+									"    }),\r",
+									"  },\r",
+									"};\r",
+									"\r",
+									"// Send the authentication request\r",
+									"pm.sendRequest(authRequest, (err, response) => {\r",
+									"  if (err) {\r",
+									"    console.error(err);\r",
+									"    // Handle error, e.g., set an error flag or log the error\r",
+									"  } else {\r",
+									"    // Parse the response body to extract the access token\r",
+									"    const responseBody = JSON.parse(response.text());\r",
+									"\r",
+									"    // Set the access token as a collection variable\r",
+									"    pm.collectionVariables.set('token', responseBody.token);\r",
+									"    console.log(responseBody.token)\r",
+									"  }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser1\",\n  \"password\": \"testpassword\",\n  \"isAdmin\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3004/admin/editUser/65ba4b4901678bb5ce844900",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3004",
+							"path": [
+								"admin",
+								"editUser",
+								"65ba4b4901678bb5ce844900"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "searchUser",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const authRequest = {\r",
+									"  method: 'POST',\r",
+									"  url: 'http://localhost:3000/auth/login',\r",
+									"  header: {\r",
+									"    'Content-Type': 'application/json',\r",
+									"    // Add any other headers if required\r",
+									"  },\r",
+									"  body: {\r",
+									"    mode: 'raw',\r",
+									"    raw: JSON.stringify({\r",
+									"      username: 'editeduser',\r",
+									"      password: 'editedpassword',\r",
+									"    }),\r",
+									"  },\r",
+									"};\r",
+									"\r",
+									"// Send the authentication request\r",
+									"pm.sendRequest(authRequest, (err, response) => {\r",
+									"  if (err) {\r",
+									"    console.error(err);\r",
+									"    // Handle error, e.g., set an error flag or log the error\r",
+									"  } else {\r",
+									"    // Parse the response body to extract the access token\r",
+									"    const responseBody = JSON.parse(response.text());\r",
+									"\r",
+									"    // Set the access token as a collection variable\r",
+									"    pm.collectionVariables.set('token', responseBody.token);\r",
+									"    console.log(responseBody.token)\r",
+									"  }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"testuser\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3002/admin/searchUser",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"admin",
+								"searchUser"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication APIs",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"testuser3\",\n  \"password\": \"testpassword\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3004/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3004",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3002/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Groups APIs",
+			"item": [
+				{
+					"name": "Create Group",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const authRequest = {\r",
+									"  method: 'POST',\r",
+									"  url: 'http://localhost:3002/auth/login',\r",
+									"  header: {\r",
+									"    'Content-Type': 'application/json',\r",
+									"    // Add any other headers if required\r",
+									"  },\r",
+									"  body: {\r",
+									"    mode: 'raw',\r",
+									"    raw: JSON.stringify({\r",
+									"      username: 'testuser1',\r",
+									"      password: 'testpassword',\r",
+									"    }),\r",
+									"  },\r",
+									"};\r",
+									"\r",
+									"// Send the authentication request\r",
+									"pm.sendRequest(authRequest, (err, response) => {\r",
+									"  if (err) {\r",
+									"    console.error(err);\r",
+									"    // Handle error, e.g., set an error flag or log the error\r",
+									"  } else {\r",
+									"    // Parse the response body to extract the access token\r",
+									"    const responseBody = JSON.parse(response.text());\r",
+									"\r",
+									"    // Set the access token as a collection variable\r",
+									"    pm.collectionVariables.set('token', responseBody.token);\r",
+									"    console.log(responseBody.token)\r",
+									"  }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"testgroup\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3002/groups/createGroup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"groups",
+								"createGroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Group",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3002/groups/deleteGroup/{{groupId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"groups",
+								"deleteGroup",
+								"{{groupId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Group",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3002/groups/searchGroup/testgroup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"groups",
+								"searchGroup",
+								"testgroup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Member to Group",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3002/groups/addMember/{{groupId}}/{{userId}}?",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"groups",
+								"addMember",
+								"{{groupId}}",
+								"{{userId}}"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Group Messages APIs",
+			"item": [
+				{
+					"name": "Send Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"description": "Token obtained after login"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"test message\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3002/messages/sendMessage/{{groupId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"messages",
+								"sendMessage",
+								"{{groupId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Like Message",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3002/messages/likeMessage/65ba51e56887649c1b0e2ea8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3002",
+							"path": [
+								"messages",
+								"likeMessage",
+								"65ba51e56887649c1b0e2ea8"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "groupId",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		}
+	]
 }
