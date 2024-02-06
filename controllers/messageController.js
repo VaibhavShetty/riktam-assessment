@@ -1,4 +1,5 @@
 const Message = require('../models/Message')
+const Group = require('../models/Group')
 
 exports.sendMessage = async (req, res) => {
   const { groupId } = req.params

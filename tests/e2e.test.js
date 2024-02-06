@@ -1,17 +1,25 @@
 const request = require('supertest')
-const app = require('../index')
+const server = require('../index')
 const User = require('../models/User')
 const { hashString } = require('../util/hash')
 
 describe('Group Chat API Tests', () => {
-  let server = app
-  let user
 
-  // write before all of jest
-  beforeAll(async (done) => {
-    user = await User.create({ username: 'testUser', password: hashString('testPassword'), isAdmin: true })
-    done()
-  })
+  beforeAll(async () => {
+    try {
+      await User.deleteOne({ username: 'testUser' });
+
+      await User.create({ username: 'testUser', password: hashString('testPassword'), isAdmin: true });
+
+    } catch (error) {
+      console.log(`Error in beforeAll: ${error}`);
+      throw error; 
+    } finally {
+      await User.deleteOne({ username: 'testuser2262' });
+      await User.deleteOne({ username: 'editeduser26' });
+    }
+  }, 100000);
+  
 
   it('should create a user', async () => {
     const authResponse = await request(server)
@@ -21,49 +29,52 @@ describe('Group Chat API Tests', () => {
     const response = await request(server)
       .post('/admin/createUser')
       .set('Authorization', authResponse.body.token)
-      .send({ username: 'testuser2', password: 'testpassword2', isAdmin: false })
+      .send({ username: 'testuser2262', password: 'testpassword2', isAdmin: false })
 
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty('_id')
-    expect(response.body.username).toBe('testuser2')
-  })
+    expect(response.body.username).toBe('testuser2262')
+  }, 100000)
 
   it('should edit a user', async () => {
-    const createUserResponse = await request(server)
+    const authResponse = await request(server)
       .post('/auth/login')
-      .send({ username: 'testuser2', password: 'testpassword2' })
+      .send({ username: 'testUser', password: 'testPassword' })
 
-    const userId = createUserResponse.body._id
+    const searchUserResponse = await request(server)
+    .post('/admin/searchUser')
+    .set('Authorization', authResponse.body.token)
+    .send({ username: 'testuser2262' })
 
     const response = await request(server)
-      .put(`/admin/editUser/${userId}`)
+      .put(`/admin/editUser/${searchUserResponse.body._id}`)
       .set('Authorization', authResponse.body.token)
-      .send({ username: 'editeduser', password: 'editedpassword', isAdmin: false })
+      .send({ username: 'editeduser26', password: 'editedpassword2', isAdmin: false })
 
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty('_id')
-    expect(response.body.username).toBe('editeduser')
+    expect(response.body.username).toBe('editeduser26')
     expect(response.body.isAdmin).toBe(false)
-  })
+  },100000)
 
   it('should search a user', async () => {
     const authResponse = await request(server)
       .post('/auth/login')
-      .send({ username: 'editeduser', password: 'editedpassword' })
+      .send({ username: 'testUser', password: 'testPassword' })
 
     const searchUserResponse = await request(server)
       .post('/admin/searchUser')
       .set('Authorization', authResponse.body.token)
-      .send({ username: 'editeduser' })
+      .send({ username: 'editeduser26' })
 
     expect(searchUserResponse.status).toBe(200)
     expect(searchUserResponse.body).toHaveProperty('_id')
-    expect(searchUserResponse.body.username).toBe('editeduser')
-    expect(searchUserResponse.body.isAdmin).toBe(true)
+    expect(searchUserResponse.body.username).toBe('editeduser26')
+    expect(searchUserResponse.body.isAdmin).toBe(false)
   })
 
   it('should authenticate and get a token', async () => {
-    const response = await request(server).post('/auth/login').send({ username: 'testuser', password: 'testpassword' })
+    const response = await request(server).post('/auth/login').send({ username: 'testUser', password: 'testPassword' })
 
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty('token')
@@ -72,7 +83,7 @@ describe('Group Chat API Tests', () => {
   it('should create a group', async () => {
     const authResponse = await request(server)
       .post('/auth/login')
-      .send({ username: 'testuser', password: 'testpassword' })
+      .send({ username: 'testUser', password: 'testPassword' })
 
     const response = await request(server)
       .post('/groups/createGroup')
@@ -87,7 +98,7 @@ describe('Group Chat API Tests', () => {
   it('should delete a group', async () => {
     const authResponse = await request(server)
       .post('/auth/login')
-      .send({ username: 'testuser', password: 'testpassword' })
+      .send({ username: 'testUser', password: 'testPassword' })
 
     const createGroupResponse = await request(server)
       .post('/groups/createGroup')
@@ -96,7 +107,7 @@ describe('Group Chat API Tests', () => {
 
     const groupId = createGroupResponse.body._id
 
-    const response = await request(server).delete(`/groups/deleteGroup/${groupId}`).set('Authorization', token)
+    const response = await request(server).delete(`/groups/deleteGroup/${groupId}`).set('Authorization', authResponse.body.token)
 
     expect(response.status).toBe(200)
     expect(response.body).toHaveProperty('_id')
@@ -106,7 +117,7 @@ describe('Group Chat API Tests', () => {
   it('should search for a group', async () => {
     const authResponse = await request(server)
       .post('/auth/login')
-      .send({ username: 'testuser', password: 'testpassword' })
+      .send({ username: 'testUser', password: 'testPassword' })
 
     const response = await request(server)
       .get('/groups/searchGroup/testgroup')
@@ -120,7 +131,7 @@ describe('Group Chat API Tests', () => {
   it('should add a member to a group', async () => {
     const authResponse = await request(server)
       .post('/auth/login')
-      .send({ username: 'testuser', password: 'testpassword' })
+      .send({ username: 'testUser', password: 'testPassword' })
 
     const createGroupResponse = await request(server)
       .post('/groups/createGroup')
@@ -129,12 +140,12 @@ describe('Group Chat API Tests', () => {
 
     const groupId = createGroupResponse.body._id
 
-    const createUserResponse = await request(server)
-      .post('/admin/createUser')
-      .set('Authorization', token)
-      .send({ username: 'newuser', password: 'newpassword', isAdmin: false })
+    const searchUserResponse = await request(server)
+      .post('/admin/searchUser')
+      .set('Authorization', authResponse.body.token)
+      .send({ username: 'editeduser26' })
 
-    const userId = createUserResponse.body._id
+    const userId = searchUserResponse.body._id
 
     const response = await request(server)
       .post(`/groups/addMember/${groupId}/${userId}`)
@@ -149,14 +160,14 @@ describe('Group Chat API Tests', () => {
   it('should send a message to a group', async () => {
     const authResponse = await request(server)
       .post('/auth/login')
-      .send({ username: 'testuser', password: 'testpassword' })
+      .send({ username: 'testUser', password: 'testPassword' })
 
     const token = authResponse.body.token
 
     const createGroupResponse = await request(server)
       .post('/groups/createGroup')
       .set('Authorization', token)
-      .send({ name: 'testgroup' })
+      .send({ name: 'testgroup2' })
 
     const groupId = createGroupResponse.body._id
 
@@ -173,7 +184,7 @@ describe('Group Chat API Tests', () => {
   it('should like a message', async () => {
     const authResponse = await request(server)
       .post('/auth/login')
-      .send({ username: 'testuser', password: 'testpassword' })
+      .send({ username: 'testUser', password: 'testPassword' })
 
     const token = authResponse.body.token
 
